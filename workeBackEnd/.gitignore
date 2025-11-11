@@ -5,7 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-application.yaml
+# 모든 application*.yaml 무시
+/workeBackEnd/src/main/resources/application*.yaml
+
 
 ### STS ###
 .apt_generated
