@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 # 모든 application*.yaml 무시
-/workeBackEnd/src/main/resources/application*.yaml
+/workeBackEnd/src/main/resources/application.yaml
 
 
 ### STS ###
