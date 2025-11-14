@@ -1,0 +1,58 @@
+.App {
+  text-align: center;
+}
+
+header {
+  background-color: #6cd9fdff; /* 🔵 원하는 색상 */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+section {
+  background: #f9f9f9;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 50px auto;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+section p {
+  font-size: 20px;
+  color: #333;
+  margin: 15px 0;
+}
+
+section input[type="text"] {
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #000000ff;
+  border-radius: 15px;
+  margin-left: 15px;
+}
+
+section input[type="number"] {
+  width: 20%;
+  padding: 10px;
+  border: 1px solid #000000ff;
+  border-radius: 15px;
+  margin-left: 15px;
+}
+
+section input[type="button"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+section input[type="button"]:hover {
+  background-color: #45a049;
+}
