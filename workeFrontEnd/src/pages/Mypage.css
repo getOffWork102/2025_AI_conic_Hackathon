@@ -1,0 +1,121 @@
+.Mypage {
+  text-align: center;
+}
+
+/* ---------------- HEADER ---------------- */
+header {
+  background-color: #ffffff;
+  color: black;
+  text-align: center;
+  padding: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  float: left;
+  height: 80px;
+}
+
+.mypage {
+  float: right;
+  height: 65px;
+  margin: 5px;
+}
+
+/* ---------------- SECTION ---------------- */
+section {
+  background: #f9f9f9;
+  text-align: left; /* 텍스트 왼쪽 기준 */
+  padding: 40px;
+  margin: 100px auto 50px;
+  width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+label {
+  text-align: left;
+}
+
+input[id="nickname"] {
+  width: 180px; /* input 고정 너비 */
+  padding: 8px;
+  padding-left: 12px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+  font-size: 18px;
+  border: 1px solid #000;
+  border-radius: 13px;
+}
+input[id="stress"] {
+  width: 50px; /* input 고정 너비 */
+  padding: 8px;
+  padding-left: 10px;
+  font-size: 18px;
+  margin-top: 20px;
+  border: 3px solid #000;
+  border-radius: 13px;
+}
+input[id="email"] {
+  background-color: #e5e5e5ff;
+  width: 186px; /* input 고정 너비 */
+  padding: 8px;
+  padding-left: 12px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 13px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+label[for="stress"] {
+  margin-top: 15px;
+}
+label[for="email"] {
+  margin-left: 120px;
+}
+
+/* 숫자 input 너비 조정 */
+
+/* ---------------- SUBMIT BUTTON ---------------- */
+.button {
+  padding: 10px 16px;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+div[id="buttons"] {
+  display: flex;
+  width: 500px;
+  margin: 20px auto;
+}
+input[id="apply"] {
+  margin-top: 30px;
+  margin-left: 200px;
+  background-color: #4c84af;
+}
+input[id="logout"] {
+  margin-left: 230px;
+  background-color: #8b8b8bff;
+}
+input[id="delete"] {
+  margin-left: 20px;
+  background-color: #8b8b8bff;
+}
+
+input[type="submit"]:hover {
+  background-color: #417094ff;
+}
+
+input[id="logout"]:hover {
+  background-color: #417094ff;
+}
+input[id="delete"]:hover {
+  background-color: #417094ff;
+}
