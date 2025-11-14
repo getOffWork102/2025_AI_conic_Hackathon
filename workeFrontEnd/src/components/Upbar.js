@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import logo from "../logo.png";
 import mypage from "../mypage.png";
+
 class Upbar extends Component {
   render() {
     return (
