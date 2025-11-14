@@ -1,58 +1,84 @@
-.App {
+.Login {
   text-align: center;
 }
 
 header {
-  background-color: #6cd9fdff; /* 🔵 원하는 색상 */
-  color: white;
+  background-color: #ffffffff; /* 🔵 원하는 색상 */
+  color: black;
   text-align: center;
+
   padding: 20px;
-  font-size: 24px;
+  font-size: 15px;
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+.logo {
+  float: left;
+  height: 80px;
+}
+
+.mypage {
+  float: right;
+  margin: 10px;
+  height: 60px;
+}
 section {
   background: #f9f9f9;
-  border-radius: 20px;
+  text-align: center;
   padding: 30px;
   margin: 50px auto;
+  margin-top: 130px;
   width: 400px;
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 section p {
   font-size: 20px;
   color: #333;
-  margin: 15px 0;
+  margin: 20px;
 }
 
 section input[type="text"] {
+  font-size: 20px;
   width: 50%;
   padding: 10px;
   border: 1px solid #000000ff;
-  border-radius: 15px;
+  border-radius: 5px;
+  margin-left: 15px;
+  margin-right: 40px;
+}
+
+section input[type="email"] {
+  font-size: 20px;
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #000000ff;
+  border-radius: 5px;
   margin-left: 15px;
 }
 
 section input[type="number"] {
-  width: 20%;
+  font-size: 20px;
+  width: 15%;
   padding: 10px;
   border: 1px solid #000000ff;
-  border-radius: 15px;
+  border-radius: 5px;
   margin-left: 15px;
+  margin-right: 120px;
 }
 
 section input[type="button"] {
-  background-color: #4caf50;
+  background-color: #4c84afff;
   color: white;
   border: none;
   padding: 10px 16px;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
 }
 
 section input[type="button"]:hover {
-  background-color: #45a049;
+  background-color: #2424d9ff;
 }
