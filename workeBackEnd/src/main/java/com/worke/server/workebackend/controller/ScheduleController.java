@@ -69,6 +69,27 @@ public class ScheduleController {
         }
     }
 
+    @GetMapping("/{schedule_id}")
+    public ResponseEntity<?> GetScheduleById(@AuthenticationPrincipal OAuth2User oAuth2User,
+                                         @PathVariable Long schedule_id) {
+        try {
+            //client id 확인
+            if (oAuth2User instanceof SessionUser) {
+                SessionUser sessionUser = (SessionUser) oAuth2User;
+
+                Long myId = sessionUser.getClient_id();
+
+                ScheduleRes.ScheduleAll res = scheduleService.getScheduleByScheduleId(schedule_id);
+                return ResponseEntity.ok(res);
+            }
+
+            return ResponseEntity.status(401).body("정회원이 아닙니다. 회원가입 해주세요.");
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
+    }
+
     @GetMapping("/conflict")
     public ResponseEntity<?> GetSchedule(@AuthenticationPrincipal OAuth2User oAuth2User,
                                          @RequestParam("start_time") LocalDateTime start_time,

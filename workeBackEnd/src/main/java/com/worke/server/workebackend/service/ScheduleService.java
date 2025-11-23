@@ -380,4 +380,8 @@ public class ScheduleService {
         repeatScheduleRepo.deleteByClient_id(clientId);
         return 0;
     }
+
+    public ScheduleRes.ScheduleAll getScheduleByScheduleId(Long scheduleId) {
+        return scheduleRepo.findByScheduleId(scheduleId);
+    }
 }

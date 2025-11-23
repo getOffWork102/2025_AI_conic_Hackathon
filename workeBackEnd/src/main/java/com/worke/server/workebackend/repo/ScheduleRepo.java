@@ -16,7 +16,7 @@ public interface ScheduleRepo extends JpaRepository<Schedule, Integer> {
                     "s.schedule_id, s.schedule_name, s.location, s.memo, " +
                     "s.start_time, s.end_time, s.final_end_date, s.stress_tag, s.controllable, s.notification_time, false)" +
                     "FROM Schedule s " +
-                    "WHERE s.start_time < :end AND s.end_time > :start " +
+                    "WHERE s.start_time <= :end AND s.end_time >= :start " +
                     "AND s.client_id = :clientId")
     List<ScheduleRes.ScheduleAll> findByStartTimeBetweenAndClient_id(
             LocalDateTime start,
@@ -35,6 +35,12 @@ public interface ScheduleRepo extends JpaRepository<Schedule, Integer> {
 
     @Query("SELECT s FROM Schedule s WHERE s.schedule_id = :scheduleId")
     Schedule findBySchedule_id(Long scheduleId);
+
+    @Query("SELECT new com.worke.server.workebackend.dto.ScheduleRes$ScheduleAll(" +
+            "s.schedule_id, s.schedule_name, s.location, s.memo, " +
+            "s.start_time, s.end_time, s.final_end_date, s.stress_tag, s.controllable, s.notification_time, false)" +
+            "FROM Schedule s WHERE s.schedule_id = :scheduleId")
+    ScheduleRes.ScheduleAll findByScheduleId(Long scheduleId);
 
     @Query("SELECT s FROM Schedule s WHERE s.notification_time IS NOT NULL AND s.start_time > :current")
     List<Schedule> findAllFutureNotifications(LocalDateTime current);

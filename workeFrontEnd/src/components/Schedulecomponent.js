@@ -30,14 +30,22 @@ class schedulecomponent extends Component {
     }
     return true;
   };
+
   render() {
     const startTime = this.props.start_time || "";
     const endTime = this.props.end_time || "";
     const finalEndDate = this.props.final_end_date || "";
 
-    const [start_date, start_time] = startTime.split("T");
-    const [end_date, end_time] = endTime.split("T");
-    const [final_date, final_time] = finalEndDate.split("T");
+    // [수정 1] T로 자른 뒤, 시간 부분에서 앞에서 5글자(HH:mm)만 가져옵니다.
+    // 예: "15:00:00" -> "15:00"
+    const [start_date, start_time_raw] = startTime.split("T");
+    const start_time = start_time_raw ? start_time_raw.substring(0, 5) : "";
+
+    const [end_date, end_time_raw] = endTime.split("T");
+    const end_time = end_time_raw ? end_time_raw.substring(0, 5) : "";
+
+    const [final_date, final_time_raw] = finalEndDate.split("T");
+    const final_time = final_time_raw ? final_time_raw.substring(0, 5) : "";
 
     return (
       <section className="schedule" id="schedule-section">
@@ -51,19 +59,23 @@ class schedulecomponent extends Component {
             onSubmit={function (e) {
               e.preventDefault();
               this.props.onSubmit(
-                e.target[0].value,
-                e.target[1].value,
-                e.target[2].value,
-                `${e.target[3].value}T${e.target[4].value || "00:00:00"}`,
-                `${e.target[5].value}T${e.target[6].value || "23:59:00"}`,
-                `${e.target[7].value}T${e.target[8].value || "00:00:00"}`,
+                e.target[0].value, // 제목
+                e.target[1].value, // 장소
+                e.target[2].value, // 스트레스
+                
+                // [수정 2] 보낼 때는 뒤에 :00을 수동으로 붙여서 보냅니다.
+                // 입력값(HH:mm) + ":00" -> HH:mm:00
+                `${e.target[3].value}T${e.target[4].value}:00`, 
+                `${e.target[5].value}T${e.target[6].value}:00`,
+                `${e.target[7].value}T${e.target[8].value}:00`,
+                
                 e.target[9].checked,
                 e.target[10].checked,
                 e.target[11].value,
                 e.target[12].value
               );
 
-              alert("APPLY Successful!");
+              // alert("APPLY Successful!"); // (부모 컴포넌트에서 처리하므로 여기서는 생략해도 됨)
             }.bind(this)}
           >
             <div id="row1">
@@ -126,6 +138,7 @@ class schedulecomponent extends Component {
                     defaultValue={start_date}
                     noValidate
                   ></input>
+                  {/* defaultValue가 "HH:mm" 형식이면 브라우저가 초 입력을 숨깁니다 */}
                   <input
                     className="schedule"
                     type="time"
@@ -230,7 +243,12 @@ class schedulecomponent extends Component {
             <p>
               <label className="schedule" htmlFor="memo" id="memo-field">
                 메모
-                <input className="schedule" type="text" id="memo"></input>
+                <input 
+                    className="schedule" 
+                    type="text" 
+                    id="memo"
+                    defaultValue={this.props.memo} // 메모도 defaultValue 연결
+                ></input>
               </label>
             </p>
             <div className="schedule" id="button-row">
