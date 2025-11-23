@@ -113,80 +113,93 @@ public class ScheduleService {
 
     public List<ScheduleRes.ScheduleAll> getSchedule(LocalDateTime startTime, LocalDateTime endTime, Long myId) {
         List<ScheduleRes.ScheduleAll> res = new ArrayList<>();
-        //미래시간표
-        if(LocalDate.now().isBefore(startTime.toLocalDate())) {
-            res = scheduleRepo.findByStartTimeBetweenAndClient_id(startTime, endTime, myId);
-            List<Repeat_schedule> repeatList = repeatScheduleRepo.findByClient_idBeforeRepeat_end_date(myId, endTime.toLocalDate());
 
-            Map<DayOfWeek, List<Repeat_schedule>> repeat = repeatList.stream()
-                    .collect(Collectors.groupingBy(Repeat_schedule::getRepeat_date));
+        // 1. [공통] 기간 내의 '확정된 스케줄(Schedule 테이블)' 조회
+        List<ScheduleRes.ScheduleAll> concreteSchedules = scheduleRepo.findByStartTimeBetweenAndClient_id(startTime, endTime, myId)
+                .stream()
+                .map(s -> ScheduleRes.ScheduleAll.builder()
+                        .schedule_id(s.getSchedule_id())
+                        .schedule_name(s.getSchedule_name())
+                        .location(s.getLocation())
+                        .memo(s.getMemo())
+                        .start_time(s.getStart_time())
+                        .end_time(s.getEnd_time())
+                        .final_end_date(s.getFinal_end_date())
+                        .stress_tag(s.getStress_tag())
+                        .controllable(s.getControllable())
+                        .notification_time(s.getNotification_time())
+                        .repeat_check(false)
+                        .build())
+                .collect(Collectors.toList());
 
-            LocalDate current = startTime.toLocalDate();
-            while(current.isBefore(startTime.toLocalDate())) {
-                DayOfWeek today = current.getDayOfWeek();
+        res.addAll(concreteSchedules);
 
-                if (repeat.containsKey(today)) {
-                    List<Repeat_schedule> todaySchedules = repeat.get(today);
-                    for (Repeat_schedule rs : todaySchedules) {
-                        ScheduleRes.ScheduleAll schedule = ScheduleRes.ScheduleAll.builder()
-                                .schedule_id(rs.getRepeat_id())
-                                .schedule_name(rs.getSchedule_name())
-                                .location(rs.getLocation())
-                                .memo(rs.getMemo())
-                                .start_time(rs.getStart_time())
-                                .end_time(rs.getEnd_time())
-                                .stress_tag(rs.getStress_tag())
-                                .controllable(rs.getControllable())
-                                .notification_time(rs.getNotification_time())
-                                .repeat_check(true)
-                                .build();
+        // 2. [반복 일정 계산]
+        // 로직 수정: "오늘"을 포함해서 미래를 계산해야 방금 등록한 반복 일정도 오늘 날짜에 보임
+        LocalDate today = LocalDate.now();
+        LocalDate searchStart = startTime.toLocalDate();
+        LocalDate searchEnd = endTime.toLocalDate();
 
-                        res.add(schedule);
-                    }
-                }
-                current = current.plusDays(1);
-            }
+        // 계산 시작일(calcStart) 결정
+        // 조회 시작일이 "오늘"보다 과거라면 -> "오늘"부터 계산 (과거는 위에서 DB조회로 처리했으므로)
+        // 조회 시작일이 "오늘" 또는 "미래"라면 -> "조회 시작일"부터 계산
+        LocalDate calcStart = searchStart.isBefore(today) ? today : searchStart;
 
-        }//이전 기록 불러오기
-        else if(LocalDate.now().isAfter(endTime.toLocalDate())||LocalDateTime.now().toLocalDate().isEqual(endTime.toLocalDate())) {
-            res = scheduleRepo.findByStartTimeBetweenAndClient_id(startTime, endTime, myId);
+        // 만약 계산 시작일이 조회 종료일보다 뒤라면? (예: 완전 과거 조회) -> 반복 계산 안 함
+        if (calcStart.isAfter(searchEnd)) {
+            return res;
         }
-        else{
-            res = scheduleRepo.findByStartTimeBetweenAndClient_id(startTime, endTime, myId);
-            List<Repeat_schedule> repeatList = repeatScheduleRepo.findByClient_idBeforeRepeat_end_date(myId, endTime.toLocalDate());
-            Map<DayOfWeek, List<Repeat_schedule>> repeat = repeatList.stream()
-                    .collect(Collectors.groupingBy(Repeat_schedule::getRepeat_date));
 
-            LocalDate current = LocalDate.now().plusDays(1);
-            while(!current.isAfter(endTime.toLocalDate())) {
-                DayOfWeek today = current.getDayOfWeek();
+        // 반복 데이터 조회
+        List<Repeat_schedule> repeatList = repeatScheduleRepo.findByClient_idBeforeRepeat_end_date(myId, searchEnd);
+        Map<DayOfWeek, List<Repeat_schedule>> repeatMap = repeatList.stream()
+                .collect(Collectors.groupingBy(Repeat_schedule::getRepeat_date));
 
-                if (repeat.containsKey(today)) {
-                    List<Repeat_schedule> todaySchedules = repeat.get(today);
-                    for (Repeat_schedule rs : todaySchedules) {
-                        LocalTime sTime =  rs.getStart_time().toLocalTime();
-                        LocalTime  eTime = rs.getEnd_time().toLocalTime();
-                        ScheduleRes.ScheduleAll schedule = ScheduleRes.ScheduleAll.builder()
-                                .schedule_id(rs.getRepeat_id())
-                                .schedule_name(rs.getSchedule_name())
-                                .location(rs.getLocation())
-                                .memo(rs.getMemo())
-                                .start_time(LocalDateTime.of(current, sTime))
-                                .end_time(LocalDateTime.of(current, eTime))
-                                .stress_tag(rs.getStress_tag())
-                                .controllable(rs.getControllable())
-                                .notification_time(rs.getNotification_time())
-                                .repeat_check(true)
-                                .build();
+        LocalDate current = calcStart;
 
-                        res.add(schedule);
+        // 3. 반복 루프
+        while (!current.isAfter(searchEnd)) {
+            DayOfWeek todayOfWeek = current.getDayOfWeek();
+
+            if (repeatMap.containsKey(todayOfWeek)) {
+                List<Repeat_schedule> todaySchedules = repeatMap.get(todayOfWeek);
+
+                for (Repeat_schedule rs : todaySchedules) {
+                    // 날짜 갈아끼우기
+                    LocalDateTime realStart = LocalDateTime.of(current, rs.getStart_time().toLocalTime());
+                    LocalDateTime realEnd = LocalDateTime.of(current, rs.getEnd_time().toLocalTime());
+
+                    // 반복 종료일 체크 (DB 쿼리 보완용)
+                    if (rs.getRepeat_end_date() != null && current.isAfter(rs.getRepeat_end_date())) {
+                        continue;
                     }
+
+                    ScheduleRes.ScheduleAll schedule = ScheduleRes.ScheduleAll.builder()
+                            .schedule_id(rs.getRepeat_id())
+                            .schedule_name(rs.getSchedule_name())
+                            .location(rs.getLocation())
+                            .memo(rs.getMemo())
+                            .start_time(realStart)
+                            .end_time(realEnd)
+                            // ★ [수정] 여기가 에러 원인이었습니다. null 체크 추가!
+                            .final_end_date(rs.getRepeat_end_date() != null
+                                    ? LocalDateTime.of(rs.getRepeat_end_date(), LocalTime.MAX)
+                                    : null)
+                            .stress_tag(rs.getStress_tag())
+                            .controllable(rs.getControllable())
+                            .notification_time(rs.getNotification_time())
+                            .repeat_check(true)
+                            .build();
+
+                    res.add(schedule);
                 }
-                current = current.plusDays(1);
             }
+            current = current.plusDays(1);
         }
+
         return res;
     }
+
 
     public Integer delete(Long scheduleId, LocalDateTime end, Long myId) {
         // scheduleRepo 먼저 체크
@@ -331,6 +344,7 @@ public class ScheduleService {
                 start_time, end_time, myId);
         contextSchedules.removeIf(element -> element.getSchedule_id().equals(schedule_id));
         List<StressRes.StressSummaryInfo> stressSummarys =summaryStress(start_time, end_time, myId);
+        LocalDate current =  start_time.toLocalDate();
         //중복 확인
         if(!contextSchedules.isEmpty()) {
             ScheduleRes.error err = ScheduleRes.error.builder()
@@ -340,7 +354,7 @@ public class ScheduleService {
         }
         //스트레스 확인
         for(StressRes.StressSummaryInfo stressSummary : stressSummarys) {
-            if(clientRepo.findByClient_id(myId).getClient_maxStress() < checkStress(stressSummary.getDate(),myId)){
+            if(clientRepo.findByClient_id(myId).getClient_maxStress() < stressSummary.getTotal_stress()) {
                 ScheduleRes.error err = ScheduleRes.error.builder()
                         .err(408)
                         .mess_date(stressSummary.getDate())

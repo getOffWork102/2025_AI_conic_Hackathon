@@ -9,7 +9,12 @@ class Toast extends Component {
 
     this.state = {
       visible: false,
-      toastData: "",
+      toastData: {
+        type: "info",
+        title: "",
+        message: "",
+        action: []    // {label, onClick}[]
+      },
     };
   }
 
@@ -53,19 +58,61 @@ class Toast extends Component {
     };
   }
 
-  showToast(message) {
-    this.setState({ visible: true, toastData: message });
+  // 문자열 or JSON → 표준 구조로 변환
+  normalize(raw) {
+    try {
+      const parsed = JSON.parse(raw);
 
+      return {
+        type: parsed.type || "info",
+        title: parsed.title || "알림",
+        message: parsed.message || "",
+        action: parsed.action || [],
+      };
+    } catch (err) {
+      // 단순 문자열일 때
+      return {
+        type: "info",
+        title: "알림",
+        message: raw,
+        action: [],
+      };
+    }
+  }
+
+  showToast(rawMessage) {
+    const normalized = this.normalize(rawMessage);
+
+    // 버튼이 자동으로 실행되도록 onClick 붙여주기
+    const actionButtons = (normalized.action || []).map((btn) => ({
+      label: btn.label,
+      onClick: () => {
+        console.log("버튼 클릭됨:", btn.label);
+        if (btn.url) window.location.href = btn.url;
+        if (btn.callback) btn.callback();
+        this.setState({ visible: false });
+      },
+    }));
+
+    this.setState({
+      visible: true,
+      toastData: {
+        ...normalized,
+        action: actionButtons,
+      },
+    });
+
+    // 자동 닫기 (예/아니오 있을 때는 5초로)
     setTimeout(() => {
       this.setState({ visible: false });
-    }, 3000);
+    }, 5000);
   }
 
   render() {
     return (
       <Toastcomponent 
         visible={this.state.visible} 
-        data={{ message: this.state.toastData }}
+        data={this.state.toastData}
       />
     );
   }
