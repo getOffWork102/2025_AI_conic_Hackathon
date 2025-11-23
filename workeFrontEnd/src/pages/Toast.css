@@ -35,3 +35,25 @@
 .toast-message {
   font-weight: 400;
 }
+
+
+.toast-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.toast-btn {
+  background: white;
+  color: black;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toast-btn:hover {
+  background: #eee;
+}
