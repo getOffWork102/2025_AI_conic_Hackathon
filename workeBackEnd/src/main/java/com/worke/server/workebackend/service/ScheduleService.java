@@ -136,7 +136,7 @@ public class ScheduleService {
 
         // 2. [반복 일정 계산]
         // 로직 수정: "오늘"을 포함해서 미래를 계산해야 방금 등록한 반복 일정도 오늘 날짜에 보임
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now().plusDays(1);
         LocalDate searchStart = startTime.toLocalDate();
         LocalDate searchEnd = endTime.toLocalDate();
 
