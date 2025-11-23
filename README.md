@@ -23,7 +23,7 @@
 ---
 
 ## 🎥 시연 영상
-- YouTube: *(업로드 예정)*  
+- YouTube: https://youtu.be/af-y6OieZQU
 - GitHub Repository: https://github.com/getOffWork102/2025_AI_conic_Hackathon  
 
 ---
