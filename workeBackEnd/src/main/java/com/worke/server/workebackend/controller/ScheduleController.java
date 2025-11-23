@@ -92,6 +92,7 @@ public class ScheduleController {
 
     @GetMapping("/conflict")
     public ResponseEntity<?> GetSchedule(@AuthenticationPrincipal OAuth2User oAuth2User,
+                                         @RequestParam("schedule_id") Long schedule_id,
                                          @RequestParam("start_time") LocalDateTime start_time,
                                          @RequestParam("end_time") LocalDateTime end_time,
                                          @RequestParam("stress_tag") Integer stress_tag) {
@@ -102,7 +103,7 @@ public class ScheduleController {
 
                 Long myId = sessionUser.getClient_id();
 
-                ScheduleRes.error err = scheduleService.findConflict(start_time,end_time,stress_tag,myId);
+                ScheduleRes.error err = scheduleService.findConflict(schedule_id,start_time,end_time,stress_tag,myId);
                 return ResponseEntity.ok(err);
             }
 

@@ -326,18 +326,19 @@ public class ScheduleService {
         }
     }
 
-    public ScheduleRes.error findConflict(LocalDateTime start_time,LocalDateTime end_time,Integer stress_tag,Long myId){
+    public ScheduleRes.error findConflict(Long schedule_id, LocalDateTime start_time,LocalDateTime end_time,Integer stress_tag,Long myId){
         List<ScheduleRes.ScheduleAll> contextSchedules = getSchedule(
                 start_time, end_time, myId);
+        contextSchedules.removeIf(element -> element.getSchedule_id().equals(schedule_id));
         List<StressRes.StressSummaryInfo> stressSummarys =summaryStress(start_time, end_time, myId);
-
+        //중복 확인
         if(!contextSchedules.isEmpty()) {
             ScheduleRes.error err = ScheduleRes.error.builder()
                     .err(406)
-//                    .mess_date(LocalDate.now()) //필요없는 정보이긴 함
                     .build();
             return err;
         }
+        //스트레스 확인
         for(StressRes.StressSummaryInfo stressSummary : stressSummarys) {
             if(clientRepo.findByClient_id(myId).getClient_maxStress() < checkStress(stressSummary.getDate(),myId)){
                 ScheduleRes.error err = ScheduleRes.error.builder()
