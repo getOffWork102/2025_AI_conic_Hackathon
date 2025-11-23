@@ -201,11 +201,11 @@ public class AiService {
             %s
             
             [PRIORITY LOGIC]
-            1. MAIN CRITICAL RULE : The duration of the newly recommended schedule must be exactly the same as the original schedule.
+            1. MAIN CRITICAL : The duration of the newly recommended schedule must be exactly the same as the original schedule.
             (i.e., New EndTime - New StartTime == Original EndTime - Original StartTime)
-            2. CRITICAL RULE : Must maintain at least a !10-minute gap! from any existing schedule.
+            2. CRITICAL : Must maintain at least a !10-minute gap! from any existing schedule.
             (e.g., If existing schedule is 12-09 01:27 ~ 12-31 12:31, your recommendation must end by <= 12-09 01:07 OR start after >= 12-31 12:41)
-            3. CRITICAL RULE : The new slot must NOT overlap with any 'Existing Schedules'.
+            3. CRITICAL : The new slot must NOT overlap with any 'Existing Schedules'.
             (Pay attention to Multi-Day events! e.g., Start: 12-09 | End: 12-31 means the whole period is blocked.)
             4. Priority 1: As close to START time (%s) or END time (%s) as possible.
             5. Priority 2: Minimize daily total stress. (Refer to [DAILY STRESS REPORT]. Pick a day with low stress.)
@@ -261,10 +261,10 @@ public class AiService {
               (Selection Criteria: Must be Controllable=true > Priority to Non-Repeating > Priority to Higher Stress)
             
             [LOGIC STEP 2: Find New Slot]
-            1. CRITICAL RULE : The new slot must NOT overlap with any other schedules.
+            1. CRITICAL : The new slot must NOT overlap with any other schedules.
                (Pay attention to Multi-Day events! They block the entire duration.)
-            2. CRITICAL RULE : Must maintain 10min gap.
-            3. CRITICAL RULE : The duration of the newly recommended schedule must be exactly the same as the original schedule.
+            2. CRITICAL : Must maintain 10min gap.
+            3. CRITICAL : The duration of the newly recommended schedule must be exactly the same as the original schedule.
             (i.e., New EndTime - New StartTime == Original EndTime - Original StartTime)
             4. Priority 1: Minimize daily total stress. (Refer to [DAILY STRESS REPORT]. Pick a day with low stress.)
             5. Priority 2: As close to START time (%s) or END time (%s) as possible.
