@@ -1,0 +1,169 @@
+/* ========================================= */
+/* 전체 레이아웃 */
+/* ========================================= */
+
+#schedule-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  justify-content: center;   /* 가로 중앙 */
+  align-items: center;       /* 세로 중앙 */
+  display: flex;
+  height: 100vh;             /* 화면 전체 높이 */
+}
+
+#schedule-div {
+  background: #ffffff;
+  padding: 30px 40px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 1000px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================= */
+/* 타이틀 */
+/* ========================================= */
+
+#schedule-title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* ========================================= */
+/* 폼 전체 */
+/* ========================================= */
+
+#schedule-form {
+  display: flex;
+  flex-direction: column;
+  margin-left: 100px;
+  gap: 25px;
+}
+
+/* ======= 1줄: 3칸 제목/장소/스트레스 ======= */
+#row1 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+#row1 label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ======= 2줄: 시작/종료/마감 ======= */
+#row2 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+#row2 label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* 날짜 + 시간 묶음 */
+#row2 input[type="date"],
+#row2 input[type="time"] {
+  margin-top: 3px;
+}
+
+/* ======= 3줄: 통제/반복/알림 ======= */
+#row3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+#row3 label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* 공통 인풋 */
+#schedule-form input[type="text"],
+#schedule-form input[type="date"],
+#schedule-form input[type="time"],
+#schedule-form input[type="number"],
+#schedule-form select {
+  padding: 8px 10px;
+  font-size: 15px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  width: 50%;
+}
+
+/* ======= 메모(전체 폭) ======= */
+#memo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 15px;
+}
+#controllable-field,
+#repeat-field {
+  display: flex;
+  /* 라벨 → 체크박스 순서 */
+  align-items: center;
+  gap: 10px;
+}
+
+/* ======= 버튼 2개 전체폭 ======= */
+#button-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ========================================= */
+/* 버튼 */
+/* ========================================= */
+
+.schedule #apply,
+.schedule #delete {
+  padding: 12px 22px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 80%;
+}
+
+#apply {
+  background: #333;
+  color: white;
+}
+#apply:hover {
+  background: #555;
+}
+
+#delete {
+  background: #6b2c2c;
+  color: white;
+}
+#delete:hover {
+  background: #5a2424;
+}
+
+
+.required-msg {
+  display: block;
+  color: #5a2424;   /* 빨간 느낌 */
+  font-size: 12px;
+  margin-top: 4px;
+}

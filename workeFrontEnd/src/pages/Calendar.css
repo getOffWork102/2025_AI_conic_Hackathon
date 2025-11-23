@@ -1,0 +1,346 @@
+@charset "utf-8";
+
+/* 팔레트(원하는 색으로 변경 가능) */
+:root{
+  --s0: #d8e7ff; /* very low */
+  --s1: #d6f2ff;
+  --s2: #ddf6df;
+  --s3: #fff4cc;
+  --s4: #ffe1cc;
+  --s5: #ffd6d6;
+
+  /* 텍스트 대비용 */
+  --t0: #2a3b5c;
+  --t1: #255963;
+  --t2: #295f33;
+  --t3: #6a5b17;
+  --t4: #8a3f21;
+  --t5: #6d2b2b;
+}
+
+
+/* 달력 전체 컨테이너 */
+.calendar {
+  width: 90%;
+  min-width: 1000px;  
+  margin: 20px auto;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 14px;
+  border: 2px solid #ccc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+#calendar-container {
+  width: 100%;
+  height: 100%;
+  margin: 50px auto;
+
+  overflow: hidden;           
+  box-sizing: border-box;
+
+}
+
+
+/* 오늘 날짜 기본 표시 + 바깥쪽 점선만 표시 */
+.fc-daygrid-day.fc-day-today {
+  background: rgba(0,0,0,0.07) !important;
+  outline: 2px dashed rgba(0,0,0,0.25);
+  outline-offset: -2px; /* 바깥쪽 위치 조정 */
+}
+
+/* 내부 프레임/배경 레이어의 border 제거 (중요!) */
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-frame,
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-bg,
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-top,
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-events {
+  border: none !important;
+}
+
+/* 주간/일간 뷰에도 today outline만 적용하고 내부 border 제거 */
+.fc-timegrid-col.fc-day-today {
+  background: rgba(0,0,0,0.07) !important;
+  outline: 2px dashed rgba(0,0,0,0.25);
+  outline-offset: -2px;
+  border: none !important;
+}
+
+.fc-timegrid-col.fc-day-today .fc-timegrid-col-frame {
+  border: none !important;
+}
+
+/* 오늘 날짜 숫자만 굵게(Bold) */
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  font-weight: 700 !important;
+}
+
+
+/* 툴바 */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 0;
+  padding: 0 40px;
+  height: 60px;
+  font-size: 12px;
+  line-height: 30px;
+  color: black;
+  border-radius: 20px 20px 0 0;
+}
+
+/* 툴바 버튼 기본 스타일 */
+.fc .fc-button {
+  border: 2px solid #333;
+  background: #333;
+  color: white;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 0 4px;
+  font-weight: 500;
+}
+
+/* 툴바 버튼 활성 상태 */
+.fc .fc-button.fc-button-active {
+  background: #555;
+  color: white;
+  border-color: #555;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+  font-weight: 600;
+}
+
+/* 툴바 버튼 호버/포커스/비활성화 */
+.fc .fc-toolbar-chunk .fc-button:disabled {
+  color: #e8e8e8;
+}
+.fc .fc-toolbar-chunk .fc-button:disabled:hover {
+  background-color: transparent;
+}
+.fc .fc-toolbar-chunk .fc-button:focus {
+  box-shadow: none;
+}
+.fc .fc-toolbar-chunk .fc-button:hover {
+  background-color: #555;
+}
+
+/* 날짜 변경 화살표 박스 제거 */
+.fc .fc-button-primary span {
+  font-weight: 500;
+  font-size: 28px;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+/* 요일 헤더 */
+.fc-theme-standard th {
+  height: 40px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  color: #7b7b7b;
+  vertical-align: middle;
+}
+
+/* 날짜 Cell */
+.fc .fc-daygrid-day-frame {
+  padding: 10px;
+}
+.fc .fc-daygrid-day-top {
+  flex-direction: row;
+  height: 30px;
+  margin-bottom: 3px;
+}
+.fc .fc-daygrid-day-number {
+  z-index: auto !important;
+}
+
+
+/* ========== 공통 베이스: 모든 뷰/타입(싱글/멀티) 카드화 ========== */
+.fc .fc-event,
+.fc .fc-h-event,              /* dayGrid(월) 멀티/종일바 */
+.fc .fc-v-event,              /* timeGrid(주/일) 세로 카드 */
+.fc .fc-daygrid-event {       /* 월뷰 일반 이벤트(기본 dot도 block화됨) */
+  border-radius: 10px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+
+/* ========== 본문(텍스트) 공통 패딩/두께 ========== */
+.fc .fc-event .fc-event-main,
+.fc .fc-h-event .fc-event-main,
+.fc .fc-v-event .fc-event-main,
+.fc .fc-daygrid-event .fc-event-main,
+.fc .fc-event-title, /* 멀티바 타이틀 안전장치 */
+.fc .fc-event-time { /* 타임라벨도 동일하게 */
+  padding: 4px 8px;
+  font-weight: 600;
+}
+
+/* ========== 주말 날짜(숫자/헤더)만 색, 이벤트는 상속(팔레트 유지) ========== */
+.fc .fc-daygrid-day.fc-day-sun .fc-daygrid-day-number { color: #d22; }
+.fc .fc-daygrid-day.fc-day-sat .fc-daygrid-day-number { color: #1976d2; }
+.fc .fc-col-header .fc-col-header-cell.fc-day-sun .fc-col-header-cell-cushion { color: #d22; }
+.fc .fc-col-header .fc-col-header-cell.fc-day-sat .fc-col-header-cell-cushion { color: #1976d2; }
+
+/* 이벤트 내부 텍스트는 팔레트 색을 따르도록(주말 컬러가 덮지 못하게) */
+.fc .fc-day-sun .fc-event .fc-event-main,
+.fc .fc-day-sat .fc-event .fc-event-main,
+.fc .fc-day-sun .fc-event .fc-event-title,
+.fc .fc-day-sat .fc-event .fc-event-title,
+.fc .fc-day-sun .fc-event .fc-event-time,
+.fc .fc-day-sat .fc-event .fc-event-time {
+  color: inherit !important;
+}
+
+/* ========== 스트레스 팔레트(0..5) — 배경/텍스트/테두리 일괄 ========== */
+.evt-stress-0,
+.evt-stress-0 .fc-event-main,
+.evt-stress-0 .fc-event-title,
+.evt-stress-0 .fc-event-time { background: var(--s0) !important; color: var(--t0) !important; border-color: var(--s0) !important; }
+
+.evt-stress-1,
+.evt-stress-1 .fc-event-main,
+.evt-stress-1 .fc-event-title,
+.evt-stress-1 .fc-event-time { background: var(--s1) !important; color: var(--t1) !important; border-color: var(--s1) !important; }
+
+.evt-stress-2,
+.evt-stress-2 .fc-event-main,
+.evt-stress-2 .fc-event-title,
+.evt-stress-2 .fc-event-time { background: var(--s2) !important; color: var(--t2) !important; border-color: var(--s2) !important; }
+
+.evt-stress-3,
+.evt-stress-3 .fc-event-main,
+.evt-stress-3 .fc-event-title,
+.evt-stress-3 .fc-event-time { background: var(--s3) !important; color: var(--t3) !important; border-color: var(--s3) !important; }
+
+.evt-stress-4,
+.evt-stress-4 .fc-event-main,
+.evt-stress-4 .fc-event-title,
+.evt-stress-4 .fc-event-time { background: var(--s4) !important; color: var(--t4) !important; border-color: var(--s4) !important; }
+
+.evt-stress-5,
+.evt-stress-5 .fc-event-main,
+.evt-stress-5 .fc-event-title,
+.evt-stress-5 .fc-event-time { background: var(--s5) !important; color: var(--t5) !important; border-color: var(--s5) !important; }
+
+/* 월뷰의 '도트' 아이콘도 팔레트에 맞춤 */
+.evt-stress-0 .fc-daygrid-event-dot { background: var(--t0) !important; border-color: var(--t0) !important; }
+.evt-stress-1 .fc-daygrid-event-dot { background: var(--t1) !important; border-color: var(--t1) !important; }
+.evt-stress-2 .fc-daygrid-event-dot { background: var(--t2) !important; border-color: var(--t2) !important; }
+.evt-stress-3 .fc-daygrid-event-dot { background: var(--t3) !important; border-color: var(--t3) !important; }
+.evt-stress-4 .fc-daygrid-event-dot { background: var(--t4) !important; border-color: var(--t4) !important; }
+.evt-stress-5 .fc-daygrid-event-dot { background: var(--t5) !important; border-color: var(--t5) !important; }
+
+/* Hover/선택 감도(옵션) */
+.fc .fc-event:hover .fc-event-main { filter: brightness(.98); }
+.fc .fc-event.fc-event-selected .fc-event-main { outline: 2px solid rgba(0,0,0,.08); }
+/* Hover/선택(옵션) — 뷰/단일·다일 관계없이 동일 느낌 유지 */
+.fc .fc-event:hover .fc-event-main {
+  filter: brightness(0.98);
+}
+.fc .fc-event.fc-event-selected .fc-event-main {
+  outline: 2px solid rgba(0,0,0,.08);
+}
+
+/* (선택) 월간에서 점(dot) 형태 약화 */
+.fc-daygrid-event-dot { border-color: transparent; }
+
+
+/* timeGrid(주/일)에서 나란히 선 이벤트 사이에 공간 */
+.fc .fc-timegrid-event {
+  margin-right: 4px;        /* 카드 간격 */
+  box-sizing: border-box;
+}
+
+/* dayGrid(월) 멀티데이 바 사이에도 살짝 간격 */
+.fc .fc-h-event {
+  margin-bottom: 3px;
+}
+
+/* 카드 공통 룩(겹쳐 보이지 않게 테두리/그림자 약하게) */
+.fc .fc-event,
+.fc .fc-h-event,
+.fc .fc-v-event,
+.fc .fc-daygrid-event {
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+
+/* 제목 말줄임으로 겹쳐보이는 텍스트 정리 */
+.fc .fc-event .fc-event-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+
+
+/* 일정 추가 버튼 */
+#add-schedule {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#add-schedule:hover {
+  background: #555;
+}
+
+/* 하단 한 줄 전체 컨테이너 */
+.calendar-bottom-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 가운데 정렬(캘린더 폭과 맞춤) */
+}
+
+
+.calendar-bottom-row {
+  width: 100%;
+  margin: 8px auto 0;
+
+  display: flex;
+  justify-content: space-between;  /* 양 끝으로 배치 */
+  align-items: center;
+  gap: 20px;
+  padding: 6px 10px;
+}
+
+.stress-summary-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+/* 각 항목 스타일 */
+.metric {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.35);
+  gap: 6px;
+  font-size: 14px;
+}
+
+/* 라벨/값 타이포 살짝 분리 */
+.metric .label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+.metric .value {
+  font-size: 19px;
+}
