@@ -7,7 +7,6 @@ build/
 
 # 모든 application*.yaml 무시
 application.yaml
-tatus
 
 ### STS ###
 .apt_generated
